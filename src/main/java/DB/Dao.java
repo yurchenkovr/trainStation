@@ -49,7 +49,7 @@ public abstract class Dao<T, PK> extends DaoController<T, PK> {
     }
 
     @Override
-    public T getByTrainNumber(Integer tN) {
+    public T getByID(Integer tN) {
         LinkedList<T> train = new LinkedList<>();
         String query = getFindByTrainNumber();
         try {

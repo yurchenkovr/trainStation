@@ -23,7 +23,7 @@ public abstract class DaoController<T, PK> {
 
     public abstract List<T> getAll();
 
-    public abstract T getByTrainNumber(Integer tN);
+    public abstract T getByID(Integer tN);
 
     public abstract void update(T entity);
 
