@@ -101,19 +101,4 @@ public class DaoTrains extends Dao<Train, Integer> {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public void update(Train entity) {
-
-    }
-
-    @Override
-    public void delete(Integer id) {
-
-    }
-
-    @Override
-    public Train create(Train entity) {
-        return null;
-    }
 }

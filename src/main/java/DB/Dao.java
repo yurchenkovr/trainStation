@@ -50,38 +50,49 @@ public abstract class Dao<T, PK> extends DaoController<T, PK> {
 
     @Override
     public T getByTrainNumber(Integer tN) {
-            LinkedList<T> train = new LinkedList<>();
-            String query = getFindByTrainNumber();
-            try{
-                PreparedStatement ps = conn.prepareStatement(query);
-                ps.setInt(1,tN);
-                ResultSet resultSet = ps.executeQuery();
-                train.addAll(parseToResult(resultSet));
-                closePrepareStatement(ps);
-            }catch (SQLException e){
-                e.printStackTrace();
-            }
-            return train.iterator().next();
+        LinkedList<T> train = new LinkedList<>();
+        String query = getFindByTrainNumber();
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setInt(1, tN);
+            ResultSet resultSet = ps.executeQuery();
+            train.addAll(parseToResult(resultSet));
+            closePrepareStatement(ps);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return train.iterator().next();
     }
 
     @Override
     public void update(T entity) {
         String query = getUpdate();
-        try{
-            PreparedStatement ps = conn.prepareStatement(query);
-            prepareForUpdate(ps,entity);
-        }catch (SQLException e){
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            prepareForUpdate(ps, entity);
+            ps.execute();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void delete(Integer id) {
-
+        String query = getDelete();
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public T create(T entity) {
-        return null;
+    public void create(T entity) {
+        String query = getCreate();
+        try(PreparedStatement ps = conn.prepareStatement(query)){
+            prepareForInsert(ps,entity);
+            ps.execute();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 }
