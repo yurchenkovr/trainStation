@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class Dao<T, PK> extends DaoController {
+public abstract class Dao<T, PK> extends DaoController<T, PK> {
     private Connection conn;
 
     public Dao(Connection conn) {
@@ -76,12 +76,12 @@ public abstract class Dao<T, PK> extends DaoController {
     }
 
     @Override
-    public boolean delete(Object id) {
-        return false;
+    public void delete(Integer id) {
+
     }
 
     @Override
-    public Object create(Object entity) {
+    public T create(T entity) {
         return null;
     }
 }

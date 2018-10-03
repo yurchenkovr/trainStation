@@ -27,7 +27,7 @@ public abstract class DaoController<T, PK> {
 
     public abstract void update(T entity);
 
-    public abstract void delete(T id);
+    public abstract void delete(Integer id);
 
     public abstract T create(T entity);
 
