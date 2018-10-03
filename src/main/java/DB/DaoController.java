@@ -29,7 +29,7 @@ public abstract class DaoController<T, PK> {
 
     public abstract void delete(Integer id);
 
-    public abstract T create(T entity);
+    public abstract void create(T entity);
 
     public Connection getConnection() {
         return connection;
