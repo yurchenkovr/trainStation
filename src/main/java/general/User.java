@@ -4,11 +4,12 @@ public class User {
     public static final byte CLIENT = 0;
     public static final byte ADMIN = 1;
 
+    private Integer id;
     private String username;
     private String password;
     private Byte role;
 
-    public User(String username, String password, Byte role) {
+    public User(String username, String password, Byte role) throws IllegalArgumentException {
         if (!roleValidation() || !passwordValidation()) {
             throw new IllegalArgumentException();
         }
@@ -30,7 +31,11 @@ public class User {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(String password) throws IllegalArgumentException {
+        if (!passwordValidation()) {
+            throw new IllegalArgumentException();
+        }
+
         this.password = password;
     }
 
@@ -38,8 +43,16 @@ public class User {
         return role;
     }
 
-    public void setRole(Byte role) {
+    public void setRole(Byte role) throws IllegalArgumentException {
+        if (!roleValidation()) {
+            throw new IllegalArgumentException();
+        }
+
         this.role = role;
+    }
+
+    public Integer getID() {
+        return id;
     }
 
     private boolean roleValidation() {
