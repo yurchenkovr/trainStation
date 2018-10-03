@@ -3,6 +3,7 @@ package general;
 public class User {
     public static final byte CLIENT = 0;
     public static final byte ADMIN = 1;
+    public static final String INVALIDPASSWORD = "Password must be more than 5 chars";
 
     private Integer id;
     private String username;
@@ -33,7 +34,7 @@ public class User {
 
     public void setPassword(String password) throws IllegalArgumentException {
         if (!passwordValidation()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(INVALIDPASSWORD);
         }
 
         this.password = password;
