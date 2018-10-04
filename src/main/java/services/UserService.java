@@ -35,7 +35,13 @@ public class UserService {
     }
 
     public LinkedList<User> getAll() throws PersistException {
-        return (LinkedList<User>) dao.getAll();
+       LinkedList<DB.general.User> users = (LinkedList<DB.general.User>) dao.getAll();
+       LinkedList<User> result = new LinkedList<User>();
+       for (DB.general.User e : users) {
+            result.add(convertUserToUserUI(e));
+        }
+
+        return result;
     }
 
     public void delete(Integer id) throws PersistException {
