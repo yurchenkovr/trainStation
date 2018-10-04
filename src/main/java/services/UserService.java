@@ -11,7 +11,7 @@ public class UserService {
         this.dao = daoFactory.getDao(daoFactory.getContext(), general.User.class);
     }
 
-    public boolean CreateUser(String username, String password, String verifyPassword) {
+    public boolean createUser(String username, String password, String verifyPassword) {
         User userUI;
         try {
             userUI = new User(username, password, verifyPassword);
@@ -26,7 +26,15 @@ public class UserService {
         return true;
     }
 
+    public User getUser(Integer id) {
+        return convertUserToUserUI((general.User) dao.getByID(id));
+    }
+
     private general.User convertUserUIToUser(User userUI) {
         return new general.User(userUI.getUsername(), userUI.getPassword(), general.User.CLIENT);
+    }
+
+    private User convertUserToUserUI(general.User user) {
+        return new User(user.getUsername(), user.getPassword(), user.getId());
     }
 }

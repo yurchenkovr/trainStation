@@ -23,6 +23,13 @@ public class User {
         this.verifyPassword = verifyPassword;
     }
 
+    public User(String username, String password, Integer id) throws IllegalArgumentException {
+        this.username = username;
+        this.password = password;
+        this.verifyPassword = password;
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }
