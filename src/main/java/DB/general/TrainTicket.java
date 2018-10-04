@@ -7,7 +7,13 @@ import inerfaces.Identified;
 public class TrainTicket implements Identified<Integer> {
     private int TrainNumber;
     private TypeCars TypeCar;
+    private int id;
     private int price;
+    private int trainNumber;
+
+    protected void setId(int trainNumber){
+        this.trainNumber = trainNumber;
+    }
 
     public TypeCars getTypeCars() {
         return TypeCar;
@@ -29,9 +35,6 @@ public class TrainTicket implements Identified<Integer> {
         this.price = price;
     }
 
-    public void setId(int trainNumber) {
-        this.TrainNumber = trainNumber;
-    }
     @Override
     public Integer getId() {
         return TrainNumber;

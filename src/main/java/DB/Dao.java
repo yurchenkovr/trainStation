@@ -2,6 +2,7 @@ package DB;
 
 import exceptions.PersistException;
 import DB.general.Train;
+import exceptions.TypeCarsException;
 import inerfaces.GenericDao;
 import inerfaces.Identified;
 
@@ -29,7 +30,7 @@ public abstract class Dao<T extends Identified<PK>, PK extends Integer> implemen
 
     public abstract String getFindByTrainNumber();
 
-    public abstract LinkedList<T> parseToResult(ResultSet resultSet) throws SQLException, PersistException;
+    public abstract LinkedList<T> parseToResult(ResultSet resultSet) throws SQLException, PersistException, TypeCarsException;
 
     public abstract void prepareForInsert(PreparedStatement ps, T entity) throws PersistException;
 
