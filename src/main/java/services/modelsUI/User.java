@@ -1,9 +1,11 @@
 package services.modelsUI;
 
 public class User {
+    private Integer id;
     private String username;
     private String password;
     private String verifyPassword;
+
     public static final String INVALIDPASSWORD = "Password must be more than 5 chars";
     public static final String PASSWORDDOESNTMATCH = "Password doesn't match";
 
@@ -39,6 +41,14 @@ public class User {
         }
 
         this.password = password;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     private boolean passwordValidation() {

@@ -1,26 +1,32 @@
 package services;
 
-import DB.DaoController;
-import DB.DaoUsers;
+import DB.DaoFactory;
+import inerfaces.GenericDao;
 import services.modelsUI.User;
 
 public class UserService {
-    private DaoController daoController;
+    private GenericDao dao;
 
-    public UserService(DaoController daoController) {
-     //   this.daoController = daoController.ge
+    public UserService(DaoFactory daoFactory) {
+        this.dao = daoFactory.getDao(daoFactory.getContext(), general.User.class);
     }
 
-    public String CreateUser(String username, String password, String verifyPassword) {
+    public boolean CreateUser(String username, String password, String verifyPassword) {
+        User userUI;
         try {
-            User user = new User(username, password, verifyPassword);
+            userUI = new User(username, password, verifyPassword);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            return "Can't create user, " + e.getMessage();
+            return false;
         }
 
+        general.User user = convertUserUIToUser(userUI);
 
+        dao.create(user);
+        return true;
     }
 
-
+    private general.User convertUserUIToUser(User userUI) {
+        return new general.User(userUI.getUsername(), userUI.getPassword(), general.User.CLIENT);
+    }
 }
