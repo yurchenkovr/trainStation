@@ -1,4 +1,4 @@
-package general;
+package DB.general;
 
 import inerfaces.Identified;
 

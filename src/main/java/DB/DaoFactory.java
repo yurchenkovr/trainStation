@@ -1,6 +1,7 @@
 package DB;
 
-import general.User;
+import exceptions.PersistException;
+import DB.general.User;
 import inerfaces.DaoFactoryInterface;
 import inerfaces.GenericDao;
 
@@ -22,11 +23,11 @@ public class DaoFactory implements DaoFactoryInterface<Connection> {
     private String url;
     private String driver;
     private Connection connection = null;
-    private Map<Class, DaoCreator> creators = new HashMap<>();
+    private Map<Class, DaoCreator> creators;
 
 
     @Override
-    public Connection getContext() {
+    public Connection getContext() throws PersistException, IOException {
         connection = null;
         try {
             connection = DriverManager.getConnection(url, login, password);
@@ -35,25 +36,29 @@ public class DaoFactory implements DaoFactoryInterface<Connection> {
             ScriptRunner runner = new ScriptRunner(connection, false, false);
             runner.runScript(new BufferedReader(new FileReader("src/main/resources/createDBandTables")));
 
-            connection = DriverManager.getConnection(url, login, password);
+            connection = DriverManager.getConnection(url + "/TrainStation?useSSL=false", login, password);
             GenericDao genericDao = getDao(connection, User.class);
 
             if (genericDao.getAll().size() == 0 || genericDao.getAll().size() == -1) {
                 runner.runScript(new BufferedReader(new FileReader("src/main/resources/addSomeData")));
             }
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return connection;
     }
 
     @Override
-    public GenericDao getDao(Connection connection, Class dtoClass) {
+    public GenericDao getDao(Connection connection, Class dtoClass) throws PersistException{
         DaoCreator creator = creators.get(dtoClass);
+
+        if(creator == null){
+            throw new PersistException("Dao object for " + dtoClass + " not found.");
+            }
         return creator.create(connection);
     }
 
-    public DaoFactory() {
+    public DaoFactory() throws IOException {
         Configs configs = new Configs();
         ArrayList<String> properties = configs.getProperties();
         url = properties.get(0);
@@ -67,6 +72,4 @@ public class DaoFactory implements DaoFactoryInterface<Connection> {
             e.printStackTrace();
         }
     }
-
-
 }

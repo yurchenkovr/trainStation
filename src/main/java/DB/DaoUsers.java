@@ -1,6 +1,6 @@
 package DB;
 
-import general.User;
+import DB.general.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

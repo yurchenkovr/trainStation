@@ -1,7 +1,7 @@
 package DB;
 
 import exceptions.PlatformException;
-import general.Train;
+import DB.general.Train;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,6 +48,10 @@ public class DaoTrains extends Dao<Train, Integer> {
 
 
 
+    @Override
+    public Train create(Train train){
+        return  persist(train);
+    }
     @Override
     public LinkedList<Train> parseToResult(ResultSet resultSet) {
         LinkedList<Train> list = new LinkedList<>();
