@@ -1,5 +1,7 @@
 package DB;
 
+import general.Train;
+import general.TrainTicket;
 import general.User;
 import inerfaces.DaoFactoryInterface;
 import inerfaces.GenericDao;
@@ -66,6 +68,31 @@ public class DaoFactory implements DaoFactoryInterface<Connection> {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        creators = new HashMap<>();
+
+        creators.put(User.class, new DaoCreator<Connection>() {
+            @Override
+            public GenericDao create(Connection connection) {
+                return new DaoUsers(connection);
+            }
+        });
+
+        creators.put(Train.class, new DaoCreator<Connection>() {
+            @Override
+            public GenericDao create(Connection connection) {
+                return new DaoTrains(connection);
+            }
+        });
+
+        creators.put(TrainTicket.class, new DaoCreator<Connection>() {
+            @Override
+            public GenericDao create(Connection connection) {
+                //TODO Add DaoTrainTicket and replace here from DaoTrains to DaoTrainTicket
+                return new DaoTrains(connection);
+            }
+        });
+
     }
 
 
