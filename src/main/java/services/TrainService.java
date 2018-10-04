@@ -26,11 +26,11 @@ public class TrainService {
         dao.delete(tNumber);
     }
     public void create(Train train) throws PersistException {
-        Train ft =  dao.create(train);
+        Train ft = (Train) dao.create(train);
     }
 
     public LinkedList<Train> find(Integer tNumber) throws PersistException {
-        LinkedList<Train> res = dao.getByID(tNumber);
+        LinkedList<Train> res = (LinkedList<Train>) dao.getByID(tNumber);
         return res;
     }
 }

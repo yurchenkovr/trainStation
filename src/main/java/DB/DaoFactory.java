@@ -1,8 +1,9 @@
 package DB;
 
-import general.Train;
-import general.TrainTicket;
-import general.User;
+
+import DB.general.Train;
+import DB.general.TrainTicket;
+import DB.general.User;
 import inerfaces.DaoFactoryInterface;
 import exceptions.PersistException;
 import inerfaces.GenericDao;
