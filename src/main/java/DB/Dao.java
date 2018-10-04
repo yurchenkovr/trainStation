@@ -92,7 +92,7 @@ public abstract class Dao<T extends Identified<PK>, PK extends Integer> implemen
         try {
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, id);
-            //ps.execute();
+            ps.execute();
             ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
