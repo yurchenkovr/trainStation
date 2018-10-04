@@ -64,7 +64,7 @@ public class DaoUsers extends Dao<User, Integer> {
     @Override
     public void prepareForInsert(PreparedStatement ps, User entity) {
         try {
-            ps.setInt(1, entity.getID());
+            ps.setInt(1, entity.getId());
             ps.setString(2, entity.getUsername());
             ps.setString(3, entity.getPassword());
             ps.setByte(4, entity.getRole());
@@ -79,18 +79,18 @@ public class DaoUsers extends Dao<User, Integer> {
             ps.setString(1, entity.getUsername());
             ps.setString(2, entity.getPassword());
             ps.setByte(3, entity.getRole());
-            ps.setInt(4, entity.getID());
+            ps.setInt(4, entity.getId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
+   /* @Override
     public void prepareForFind(PreparedStatement ps, User entity) {
         try {
-            ps.setInt(1, entity.getID());
+            ps.setInt(1, entity.getId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

@@ -1,48 +1,39 @@
 package general;
 
 import enums.Platform;
-import enums.TrainCars;
 import exceptions.PlatformException;
+import inerfaces.Identified;
 
 import java.sql.Time;
 
-public  class  Train {
-    private int id;
+public class Train implements Identified<Integer> {
     private int TrainNumber;
     private String DepartureFrom;
     private String ArrivalTo;
     private Time arrivalTime;
     private Time departureTime;
     private Platform trainPlatform;
-    private int trainPlacesInCar;
-    private TrainCars trainCars;
 
     public Train() {
     }
-    public int getId() {
-        return id;
+
+    @Override
+    public Integer getId() {
+        return TrainNumber;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.TrainNumber = id;
     }
 
-    public TrainCars getTrainCars() {
-        return trainCars;
-    }
-
-    public void setTrainCars(TrainCars trainCars) {
-        this.trainCars = trainCars;
-    }
-
-    public int getTrainNumber() {
+  /*  public int getTrainNumber() {
         return TrainNumber;
     }
 
     public void setTrainNumber(int TrainNumber) {
         this.TrainNumber = TrainNumber;
     }
-
+*/
     public String getDepartureFrom() {
         return DepartureFrom;
     }
@@ -78,37 +69,29 @@ public  class  Train {
     public Platform getTrainPlatform() {
         return trainPlatform;
     }
-    public String getTPlatform(){
+
+    public String getTPlatform() {
         return getTrainPlatform().getAbbr();
     }
 
-    public void setTrainPlatform(String trainPlatform) throws  PlatformException{
+    public void setTrainPlatform(String trainPlatform) throws PlatformException {
         Platform tPlatform = PlatformSTEnum(trainPlatform);
         this.trainPlatform = tPlatform;
     }
 
-    public int getTrainPlacesInCar() {
-        return trainPlacesInCar;
-    }
-
-    public void setTrainPlacesInCar(int trainPlacesInCar) {
-        this.trainPlacesInCar = trainPlacesInCar;
-    }
 
     @Override
     public String toString() {
         return "general.Train{" +
-                "id=" + id +
-                ", TrainNumber=" + TrainNumber +
+                "  TrainNumber=" + TrainNumber +
                 ", DepartureFrom='" + DepartureFrom + '\'' +
                 ", ArrivalTo='" + ArrivalTo + '\'' +
                 ", arrivalTime='" + arrivalTime + '\'' +
                 ", departureTime='" + departureTime + '\'' +
                 ", trainPlatform=" + trainPlatform +
-                ", trainPlacesInCar=" + trainPlacesInCar +
-                ", trainCars=" + trainCars +
                 '}';
     }
+
     private Platform PlatformSTEnum(String platform) throws PlatformException {
         switch (platform) {
             case "A":

@@ -1,6 +1,8 @@
 package general;
 
-public class User {
+import inerfaces.Identified;
+
+public class User implements Identified<Integer> {
     public static final byte CLIENT = 0;
     public static final byte ADMIN = 1;
 
@@ -51,7 +53,8 @@ public class User {
         this.role = role;
     }
 
-    public Integer getID() {
+    @Override
+    public Integer getId() {
         return id;
     }
 

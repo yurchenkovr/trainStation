@@ -1,13 +1,13 @@
 package enums;
 
-public enum TrainCars {
+public enum TypeCars {
     PlANEBOARD("Planeboard"),
     COMPARTMENT("Compartment"),
     ELECTRICIY("Sitting");
 
     private String abbr;
 
-    TrainCars(String abbr) {
+    TypeCars(String abbr) {
         this.abbr = abbr;
     }
 
