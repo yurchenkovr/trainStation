@@ -1,6 +1,7 @@
 package DB;
 
 import DB.general.User;
+import exceptions.PersistException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -83,6 +84,11 @@ public class DaoUsers extends Dao<User, Integer> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public User create(User entity) throws PersistException {
+        return persist(entity);
     }
 
    /* @Override

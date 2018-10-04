@@ -1,5 +1,6 @@
 package DB;
 
+import exceptions.PersistException;
 import exceptions.PlatformException;
 import DB.general.Train;
 
@@ -49,7 +50,7 @@ public class DaoTrains extends Dao<Train, Integer> {
 
 
     @Override
-    public Train create(Train train){
+    public Train create(Train train) throws PersistException {
         return  persist(train);
     }
     @Override
