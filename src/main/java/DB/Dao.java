@@ -1,5 +1,7 @@
 package DB;
 
+import exceptions.PersistException;
+import DB.general.Train;
 import inerfaces.GenericDao;
 import inerfaces.Identified;
 
@@ -27,14 +29,14 @@ public abstract class Dao<T extends Identified<PK>, PK extends Integer> implemen
 
     public abstract String getFindByTrainNumber();
 
-    public abstract LinkedList<T> parseToResult(ResultSet resultSet);
+    public abstract LinkedList<T> parseToResult(ResultSet resultSet) throws SQLException, PersistException;
 
-    public abstract void prepareForInsert(PreparedStatement ps, T entity);
+    public abstract void prepareForInsert(PreparedStatement ps, T entity) throws PersistException;
 
-    public abstract void prepareForUpdate(PreparedStatement ps, T entity);
+    public abstract void prepareForUpdate(PreparedStatement ps, T entity) throws PersistException;
 
     @Override
-    public List<T> getAll() {
+    public List<T> getAll() throws PersistException {
         LinkedList<T> trains = new LinkedList<>();
         String query = getSelect();
 
@@ -43,36 +45,36 @@ public abstract class Dao<T extends Identified<PK>, PK extends Integer> implemen
             ResultSet resultSet = ps.executeQuery();
             trains.addAll(parseToResult(resultSet));
             ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new PersistException();
         }
         return trains;
     }
 
     @Override
-    public T getByID(Integer tN) {
+    public T getByID(Integer key) throws PersistException {
         LinkedList<T> train = new LinkedList<>();
         String query = getFindByTrainNumber();
 
         try {
             PreparedStatement ps = conn.prepareStatement(query);
-            ps.setInt(1, tN);
+            ps.setInt(1, key);
             ResultSet resultSet = ps.executeQuery();
             train.addAll(parseToResult(resultSet));
             ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new PersistException();
         }
         return train.iterator().next();
     }
 
     @Override
-    public void update(T entity) {
+    public void update(T entity) throws PersistException {
         String query = getUpdate();
 
-        try{
+        try {
             conn.setAutoCommit(true);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         try {
@@ -80,36 +82,74 @@ public abstract class Dao<T extends Identified<PK>, PK extends Integer> implemen
             prepareForUpdate(ps, entity);
             ps.execute();
             ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new PersistException();
         }
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Integer key) throws PersistException {
         String query = getDelete();
 
         try {
             PreparedStatement ps = conn.prepareStatement(query);
-            ps.setInt(1, id);
-            ps.execute();
+            try {
+                ps.setInt(1, key);
+            } catch (Exception e) {
+                throw new PersistException();
+            }
+            int count = ps.executeUpdate();
+            if (count != 1) {
+                throw new PersistException("On delete more than 1 record + " + count);
+            }
             ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new PersistException();
         }
     }
 
-    @Override
-    public void create(T entity) {
-        String query = getCreate();
+    /*
+        @Override
+        public void create(T entity) {
+            String query = getCreate();
 
+            try {
+                PreparedStatement ps = conn.prepareStatement(query);
+                prepareForInsert(ps, entity);
+                ps.execute();
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }*/
+    @Override
+    public T persist(T object) throws PersistException {
+        T persistInstance;
+        // Adding Entry
+        String query = getCreate();
         try {
             PreparedStatement ps = conn.prepareStatement(query);
-            prepareForInsert(ps, entity);
-            ps.execute();
-            ps.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            prepareForInsert(ps, object);
+            int count = ps.executeUpdate();
+            if (count != 1) {
+                throw new PersistException("One persist modify more than 1 record " + count);
+            }
+        } catch (Exception e) {
+            throw new PersistException();
         }
+        // We get the newly inserted record
+        if (object.getClass() == Train.class) {
+            query = "SELECT * FROM trains WHERE TrainNumber = LAST_INSERT_TrainNumber();";
+        } else {
+            query = getSelect();
+        }
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            List<T> list = parseToResult(rs);
+            persistInstance = list.iterator().next();
+        } catch (Exception e) {
+            throw new PersistException();
+        }
+        return persistInstance;
     }
 }

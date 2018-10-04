@@ -1,7 +1,7 @@
-package DB;
+/*package DB;
 
 import exceptions.TypeCarsException;
-import general.TrainTicket;
+import DB.general.TrainTicket;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -79,3 +79,4 @@ public class DaoTrainPrice extends Dao<TrainTicket, Integer> {
         }
     }
 }
+*/

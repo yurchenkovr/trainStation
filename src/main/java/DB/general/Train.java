@@ -1,4 +1,4 @@
-package general;
+package DB.general;
 
 import enums.Platform;
 import exceptions.PlatformException;
@@ -82,7 +82,7 @@ public class Train implements Identified<Integer> {
 
     @Override
     public String toString() {
-        return "general.Train{" +
+        return "DB.general.Train{" +
                 "  TrainNumber=" + TrainNumber +
                 ", DepartureFrom='" + DepartureFrom + '\'' +
                 ", ArrivalTo='" + ArrivalTo + '\'' +

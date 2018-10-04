@@ -1,4 +1,4 @@
-package general;
+package DB.general;
 
 import enums.TypeCars;
 import exceptions.TypeCarsException;
