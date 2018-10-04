@@ -27,13 +27,12 @@ public class Configs {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         ArrayList<String> properties = new ArrayList<>();
         properties.add(url);
         properties.add(login);
         properties.add(password);
         properties.add(driver);
-
-
         return properties;
     }
 }

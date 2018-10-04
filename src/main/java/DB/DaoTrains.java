@@ -46,13 +46,15 @@ public class DaoTrains extends Dao<Train, Integer> {
         return "SELECT * FROM trainstation.trains WHERE TrainNumber = ?";
     }
 
+
+
     @Override
     public LinkedList<Train> parseToResult(ResultSet resultSet) {
         LinkedList<Train> list = new LinkedList<>();
         try {
             while (resultSet.next()) {
                 Train train = new Train();
-                train.setTrainNumber(resultSet.getInt(1));
+                train.setId(resultSet.getInt(1));
                 train.setArrivalTo(resultSet.getString(2));
                 train.setDepartureFrom(resultSet.getString(3));
                 train.setdepartureTime(resultSet.getTime(4));
@@ -82,21 +84,12 @@ public class DaoTrains extends Dao<Train, Integer> {
     @Override
     public void prepareForUpdate(PreparedStatement ps, Train entity) {
         try {
-            ps.setInt(1, entity.getTrainNumber());
+            ps.setInt(1, entity.getId());
             ps.setString(2, entity.getArrivalTo());
             ps.setString(3, entity.getDepartureFrom());
             ps.setTime(4, entity.getdepartureTime());
             ps.setTime(5, entity.getarrivalTime());
             ps.setString(6, entity.getTPlatform());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void prepareForFind(PreparedStatement ps, Train entity) {
-        try {
-            ps.setInt(1, entity.getTrainNumber());
         } catch (SQLException e) {
             e.printStackTrace();
         }

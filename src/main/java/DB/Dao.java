@@ -1,5 +1,8 @@
 package DB;
 
+import inerfaces.GenericDao;
+import inerfaces.Identified;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,7 +10,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class Dao<T, PK> extends DaoController<T, PK> {
+public abstract class Dao<T extends Identified<PK>, PK extends Integer> implements GenericDao<T, PK> {
     private Connection conn;
 
     public Dao(Connection conn) {
@@ -30,8 +33,6 @@ public abstract class Dao<T, PK> extends DaoController<T, PK> {
 
     public abstract void prepareForUpdate(PreparedStatement ps, T entity);
 
-    public abstract void prepareForFind(PreparedStatement ps, T entity);
-
     @Override
     public List<T> getAll() {
         LinkedList<T> trains = new LinkedList<>();
@@ -41,7 +42,7 @@ public abstract class Dao<T, PK> extends DaoController<T, PK> {
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet resultSet = ps.executeQuery();
             trains.addAll(parseToResult(resultSet));
-            closePrepareStatement(ps);
+            ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -52,12 +53,13 @@ public abstract class Dao<T, PK> extends DaoController<T, PK> {
     public T getByID(Integer tN) {
         LinkedList<T> train = new LinkedList<>();
         String query = getFindByTrainNumber();
+
         try {
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, tN);
             ResultSet resultSet = ps.executeQuery();
             train.addAll(parseToResult(resultSet));
-            closePrepareStatement(ps);
+            ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -67,9 +69,17 @@ public abstract class Dao<T, PK> extends DaoController<T, PK> {
     @Override
     public void update(T entity) {
         String query = getUpdate();
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
+
+        try{
+            conn.setAutoCommit(true);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
             prepareForUpdate(ps, entity);
             ps.execute();
+            ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -78,8 +88,12 @@ public abstract class Dao<T, PK> extends DaoController<T, PK> {
     @Override
     public void delete(Integer id) {
         String query = getDelete();
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
             ps.setInt(1, id);
+            //ps.execute();
+            ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -88,10 +102,13 @@ public abstract class Dao<T, PK> extends DaoController<T, PK> {
     @Override
     public void create(T entity) {
         String query = getCreate();
-        try(PreparedStatement ps = conn.prepareStatement(query)){
-            prepareForInsert(ps,entity);
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(query);
+            prepareForInsert(ps, entity);
             ps.execute();
-        }catch (SQLException e){
+            ps.close();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
