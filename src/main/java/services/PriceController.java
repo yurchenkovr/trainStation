@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.List;
 
-public class PriceService {
+public class PriceController {
 
     private Connection connection;
     private GenericDao dao;
 
-    public PriceService(DaoFactory daoFactory) throws PersistException, IOException {
+    public PriceController(DaoFactory daoFactory) throws PersistException, IOException {
         this.dao = daoFactory.getDao(daoFactory.getContext(), DB.general.TrainTicket.class);
     }
 

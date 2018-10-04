@@ -9,10 +9,10 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TrainService {
+public class TrainController {
     private GenericDao dao;
 
-    public TrainService(DaoFactory daoFactory) throws IOException, PersistException {
+    public TrainController(DaoFactory daoFactory) throws IOException, PersistException {
         this.dao = daoFactory.getDao(daoFactory.getContext(), DB.general.Train.class);
     }
 

@@ -50,15 +50,15 @@ public class DaoTrainTicket extends Dao<TrainTicket, Integer> {
 
     @Override
     public LinkedList<TrainTicket> parseToResult(ResultSet resultSet) throws SQLException, TypeCarsException {
-        LinkedList<TrainTicket> trainTickets = new LinkedList<>();
+        LinkedList<TrainTicket> ticket = new LinkedList<>();
             while (resultSet.next()) {
                 PersistTrainPrice tp = new PersistTrainPrice();
                 tp.setId(resultSet.getInt(1));
                 tp.setTypeCars(resultSet.getString(2));
                 tp.setPrice(resultSet.getInt(3));
-                trainTickets.addAll(tp);
+                ticket.addAll(tp);
             }
-        return trainTickets;
+        return ticket;
     }
 
     @Override
