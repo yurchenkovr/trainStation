@@ -29,6 +29,7 @@ public class User {
         this.verifyPassword = password;
         this.id = id;
     }
+    
 
     public String getUsername() {
         return username;
@@ -64,5 +65,15 @@ public class User {
 
     private boolean comparePasswords() {
         return password.equals(verifyPassword);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", verifyPassword='" + verifyPassword + '\'' +
+                '}';
     }
 }

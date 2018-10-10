@@ -1,26 +1,21 @@
-package DB;
+package db;
 
-import exceptions.PersistException;
+import db.dao_exception.PersistException;
+import db.general.TrainTicket;
+import enums.TypeCars;
 import exceptions.TypeCarsException;
-import DB.general.TrainTicket;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.LinkedList;
 
 public class DaoTrainTicket extends Dao<TrainTicket, Integer> {
     public DaoTrainTicket(Connection conn) {
         super(conn);
     }
-    private class PersistTrainPrice extends TrainTicket {
-        @Override
-        protected void setId(int id){
-            super.setId(id);
-        }
-    }
-
 
     @Override
     public String getSelect() {
@@ -29,7 +24,7 @@ public class DaoTrainTicket extends Dao<TrainTicket, Integer> {
 
     @Override
     public String getCreate() {
-        return "INSERT INTO prices ( TypeCar, Price )" +
+        return "INSERT INTO prices ( TypeCar, Price ) " +
                 "VALUES (?, ?);";
     }
 
@@ -52,11 +47,11 @@ public class DaoTrainTicket extends Dao<TrainTicket, Integer> {
     public LinkedList<TrainTicket> parseToResult(ResultSet resultSet) throws SQLException, TypeCarsException {
         LinkedList<TrainTicket> ticket = new LinkedList<>();
             while (resultSet.next()) {
-                PersistTrainPrice tp = new PersistTrainPrice();
-                tp.setId(resultSet.getInt(1));
-                tp.setTypeCars(resultSet.getString(2));
-                tp.setPrice(resultSet.getInt(3));
-                ticket.addAll(tp);
+                TrainTicket t = new TrainTicket();
+                t.setId(resultSet.getInt("TrainNumber"));
+                t.setTypeCar(Enum.valueOf(TypeCars.class, resultSet.getString("TypeCar")));
+                t.setPrice(resultSet.getInt("price"));
+                ticket.addAll((Collection<? extends TrainTicket>) t);
             }
         return ticket;
     }
@@ -64,7 +59,7 @@ public class DaoTrainTicket extends Dao<TrainTicket, Integer> {
     @Override
     public void prepareForInsert(PreparedStatement ps, TrainTicket entity) throws PersistException {
         try {
-            ps.setString(1, entity.getTCars());
+            ps.setString(1, entity.getTypeCars().toString());
             ps.setInt(2, entity.getPrice());
         } catch (Exception e) {
             throw new PersistException();
@@ -75,7 +70,7 @@ public class DaoTrainTicket extends Dao<TrainTicket, Integer> {
     public void prepareForUpdate(PreparedStatement ps, TrainTicket entity) throws PersistException {
         try{
             ps.setInt(1,entity.getId());
-            ps.setString(2,entity.getTCars());
+            ps.setString(2,entity.getTypeCars().toString());
             ps.setInt(3,entity.getPrice());
         } catch (Exception e) {
             throw new PersistException();

@@ -1,10 +1,10 @@
-package DB;
+package db;
 
-import exceptions.PersistException;
-import DB.general.Train;
+import db.dao_exception.PersistException;
+import db.general.Train;
+import db.interfaces.GenericDao;
+import db.interfaces.Identified;
 import exceptions.TypeCarsException;
-import inerfaces.GenericDao;
-import inerfaces.Identified;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,6 +30,8 @@ public abstract class Dao<T extends Identified<PK>, PK extends Integer> implemen
 
     public abstract String getFindByTrainNumber();
 
+   // public abstract String getLastCreated();
+
     public abstract LinkedList<T> parseToResult(ResultSet resultSet) throws SQLException, PersistException, TypeCarsException;
 
     public abstract void prepareForInsert(PreparedStatement ps, T entity) throws PersistException;
@@ -37,19 +39,38 @@ public abstract class Dao<T extends Identified<PK>, PK extends Integer> implemen
     public abstract void prepareForUpdate(PreparedStatement ps, T entity) throws PersistException;
 
     @Override
-    public List<T> getAll() throws PersistException {
-        LinkedList<T> trains = new LinkedList<>();
+    public LinkedList<T> getAll() throws PersistException {
+        LinkedList<T> list = new LinkedList<>();
         String query = getSelect();
 
         try {
             PreparedStatement ps = conn.prepareStatement(query);
             ResultSet resultSet = ps.executeQuery();
-            trains.addAll(parseToResult(resultSet));
-            ps.close();
+            list.addAll(parseToResult(resultSet));
         } catch (Exception e) {
             throw new PersistException();
         }
-        return trains;
+        return list;
+    }
+
+   @Override
+    public T getByUserName(String username) throws PersistException {
+        LinkedList<T> usernames = new LinkedList<>();
+        String query = getFindByTrainNumber();
+
+        try {
+            PreparedStatement ps;
+            ps = conn.prepareStatement(query);
+            ps.setString(1,username);
+            ResultSet resultSet = ps.executeQuery();
+            usernames.addAll(parseToResult(resultSet));
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (TypeCarsException e) {
+            e.printStackTrace();
+        }
+        return usernames.iterator().next();
     }
 
     @Override
@@ -72,7 +93,6 @@ public abstract class Dao<T extends Identified<PK>, PK extends Integer> implemen
     @Override
     public void update(T entity) throws PersistException {
         String query = getUpdate();
-
         try {
             conn.setAutoCommit(true);
         } catch (SQLException e) {
@@ -109,20 +129,6 @@ public abstract class Dao<T extends Identified<PK>, PK extends Integer> implemen
         }
     }
 
-    /*
-        @Override
-        public void create(T entity) {
-            String query = getCreate();
-
-            try {
-                PreparedStatement ps = conn.prepareStatement(query);
-                prepareForInsert(ps, entity);
-                ps.execute();
-                ps.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }*/
     @Override
     public T persist(T object) throws PersistException {
         T persistInstance;
@@ -140,7 +146,7 @@ public abstract class Dao<T extends Identified<PK>, PK extends Integer> implemen
         }
         // We get the newly inserted record
         if (object.getClass() == Train.class) {
-            query = "SELECT * FROM trains WHERE TrainNumber = LAST_INSERT_TrainNumber();";
+            query = "SELECT * FROM trains WHERE TrainNumber = LAST_INSERT_ID();";
         } else {
             query = getSelect();
         }

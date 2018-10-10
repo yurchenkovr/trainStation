@@ -1,7 +1,7 @@
-package inerfaces;
+package db.interfaces;
 
 import java.io.Serializable;
 
 public interface Identified <PK extends Serializable> {
-    public PK getId();
+    PK getId();
 }

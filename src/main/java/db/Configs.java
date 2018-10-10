@@ -1,4 +1,4 @@
-package DB;
+package db;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,7 +16,7 @@ public class Configs {
         String driver = null;
 
         try {
-            fs = new FileInputStream("C:\\Users\\vital\\IdeaProjects\\billiard\\src\\main\\resources\\config.properties");
+            fs = new FileInputStream("C:\\Users\\vital\\IdeaProjects\\trainStation\\src\\main\\resources\\config.properties");
             property.load(fs);
 
             url = property.getProperty("url");

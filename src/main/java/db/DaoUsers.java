@@ -1,7 +1,7 @@
-package DB;
+package db;
 
-import DB.general.User;
-import exceptions.PersistException;
+import db.general.User;
+import db.dao_exception.PersistException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,7 +18,7 @@ public class DaoUsers extends Dao<User, Integer> {
 
     @Override
     public String getSelect() {
-        return "SELECT * FROM trainstation.users";
+        return "SELECT * FROM trainstation.users;";
     }
 
     @Override
@@ -41,7 +41,7 @@ public class DaoUsers extends Dao<User, Integer> {
 
     @Override
     public String getFindByTrainNumber() {
-        return "SELECT * FROM trainstation.users WHERE TrainNumber = ?";
+        return "SELECT * FROM trainstation.users WHERE username = ?;";
     }
 
     @Override
@@ -52,7 +52,7 @@ public class DaoUsers extends Dao<User, Integer> {
                 User user = new User(
                         resultSet.getString("username"),
                         resultSet.getString("password"),
-                        resultSet.getByte("role")
+                        resultSet.getInt("role")
                 );
                 list.add(user);
             }
@@ -68,7 +68,7 @@ public class DaoUsers extends Dao<User, Integer> {
             ps.setInt(1, entity.getId());
             ps.setString(2, entity.getUsername());
             ps.setString(3, entity.getPassword());
-            ps.setByte(4, entity.getRole());
+            ps.setInt(4, entity.getRole());
         } catch (SQLException | IllegalArgumentException e) {
             e.printStackTrace();
         }
@@ -79,7 +79,7 @@ public class DaoUsers extends Dao<User, Integer> {
         try {
             ps.setString(1, entity.getUsername());
             ps.setString(2, entity.getPassword());
-            ps.setByte(3, entity.getRole());
+            ps.setInt(3, entity.getRole());
             ps.setInt(4, entity.getId());
         } catch (SQLException e) {
             e.printStackTrace();

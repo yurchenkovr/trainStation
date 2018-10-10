@@ -1,12 +1,12 @@
-package DB;
+package db;
 
 
-import DB.general.Train;
-import DB.general.TrainTicket;
-import DB.general.User;
-import inerfaces.DaoFactoryInterface;
-import exceptions.PersistException;
-import inerfaces.GenericDao;
+import db.general.Train;
+import db.general.TrainTicket;
+import db.general.User;
+import db.interfaces.DaoFactoryInterface;
+import db.dao_exception.PersistException;
+import db.interfaces.GenericDao;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -33,18 +33,18 @@ public class DaoFactory implements DaoFactoryInterface<Connection> {
     public Connection getContext() throws PersistException, IOException {
         connection = null;
         try {
-            connection = DriverManager.getConnection(url, login, password);
-            PreparedStatement ps = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS `trainstation`;");
+            connection = DriverManager.getConnection(url + "/trainstation?useSSL=false&serverTimezone=UTC", login, password);
+            PreparedStatement ps = connection.prepareStatement("CREATE DATABASE IF NOT EXISTS trainstation;");
 
             ScriptRunner runner = new ScriptRunner(connection, false, false);
-            runner.runScript(new BufferedReader(new FileReader("src/main/resources/createDBandTables")));
+            runner.runScript(new BufferedReader(new FileReader("src/main/resources/createDBandTables.sql")));
 
-            connection = DriverManager.getConnection(url + "/TrainStation?useSSL=false", login, password);
+            connection = DriverManager.getConnection(url + "/trainstation?useSSL=false&serverTimezone=UTC", login, password);
             GenericDao genericDao = getDao(connection, User.class);
 
-            if (genericDao.getAll().size() == 0 || genericDao.getAll().size() == -1) {
-                runner.runScript(new BufferedReader(new FileReader("src/main/resources/addSomeData")));
-            }
+//            if (genericDao.getAll().size() == 0 || genericDao.getAll().size() == -1) {
+//                runner.runScript(new BufferedReader(new FileReader("src/main/resources/addSomeData.sql")));
+//            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -94,8 +94,7 @@ public class DaoFactory implements DaoFactoryInterface<Connection> {
         creators.put(TrainTicket.class, new DaoCreator<Connection>() {
             @Override
             public GenericDao create(Connection connection) {
-                //TODO Add DaoTrainTicket and replace here from DaoTrains to DaoTrainTicket
-                return new DaoTrains(connection);
+                return new DaoTrainTicket(connection);
             }
         });
 
